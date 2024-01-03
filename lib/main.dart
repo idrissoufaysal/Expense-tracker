@@ -5,6 +5,8 @@ void main() {
   runApp(const MyApp());
 }
 
+var KColorScheme = ColorScheme.fromSeed(seedColor: Colors.purple);
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -14,12 +16,29 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home:const Expenses() ,
+      theme: ThemeData().copyWith(
+          useMaterial3: true,
+          colorScheme: KColorScheme,
+          appBarTheme: const AppBarTheme().copyWith(
+            backgroundColor: KColorScheme.onPrimaryContainer,
+            foregroundColor: KColorScheme.primaryContainer,
+          ),
+          cardTheme: const CardTheme().copyWith(
+              color: KColorScheme.secondaryContainer,
+              margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 5)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+              style: ElevatedButton.styleFrom(
+                  backgroundColor: KColorScheme.primaryContainer)),
+          textTheme: ThemeData().textTheme.copyWith(
+              titleLarge: TextStyle(
+                  fontWeight: FontWeight.normal,
+                  color: KColorScheme.onSecondaryContainer
+                  ,
+                  fontSize: 14)
+                  )
+                  ),
+      
+      home: const Expenses(),
     );
   }
 }

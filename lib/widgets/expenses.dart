@@ -41,28 +41,63 @@ class _ExpensesState extends State<Expenses> {
         category: Categores.work)
   ];
 
-void _openAddExpenseOverlay(){
-  showModalBottomSheet(context: context, builder: (context){
-    return const NewExpense();
-  });
-}
+  void _openAddExpenseOverlay() {
+    showModalBottomSheet(
+        isScrollControlled: true,
+        context: context,
+        builder: (context) {
+          return NewExpense(
+            onAddExpense: _addExpense,
+          );
+        });
+  }
 
+  void _addExpense(Expense newExpense) {
+    setState(() {
+      _registredExpenses.add(newExpense);
+    });
+  }
+
+  void _removeExpense(Expense expense) {
+    final expenseIndex= _registredExpenses.indexOf(expense);
+    setState(() {
+      _registredExpenses.remove(expense);
+    });
+    ScaffoldMessenger.of(context)
+        .showSnackBar( SnackBar(
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds:3 ),
+          action: SnackBarAction(
+            label: 'cancel',
+             onPressed: (){
+              setState(() {
+                 _registredExpenses.insert(expenseIndex, expense);
+              });
+             }),
+          content:const Text('Expense deleted')));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor:const Color.fromARGB(255, 185, 135, 194),
         elevation: 10,
-        title:const Text('Flutter expense tracker'),
-        actions:  [
-          IconButton(onPressed: () {_openAddExpenseOverlay();}, 
-          icon:const Icon(Icons.add))],
+        title: const Text('Flutter expense tracker'),
+        actions: [
+          IconButton(
+              onPressed: () {
+                _openAddExpenseOverlay();
+              },
+              icon: const Icon(Icons.add))
+        ],
       ),
       body: Column(
         children: [
           const Text('The chart'),
-          Expanded(child: ExpensesList(expenses: _registredExpenses))
+          Expanded(
+              child: ExpensesList(
+                  expenses: _registredExpenses,
+                  onRemoveExpense: _removeExpense))
         ],
       ),
     );
